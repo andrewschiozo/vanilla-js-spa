@@ -18,7 +18,7 @@ export const PrivateLayout = (contentEl, authService, router) => {
                 <a href="#/usuarios" style="color: white; text-decoration: none;">Usuários</a>
             </nav>
 
-            <div style="position: fixed; bottom: 0;">
+            <div style="position: fixed; bottom: 0; margin-bottom: 10px">
                 <a href="#meu-perfil" style="color: #ccc; font-size: small; text-decoration: none">🦉${authService.user().name}</a>
                 <button id="logout-btn" style="background: #e74c3c; color: white; border: none; padding: 8px; width: 100%; cursor: pointer; border-radius: 4px; margin-top: 10px">Sair</button>
             </div>
