@@ -103,8 +103,6 @@ export const UserManagerPage = (userService, router, editId = null) => {
     };
 
     const init = () => {
-        console.log("init");
-        console.log(router.currentRoute);
         if (editId) {
             actions.showEditForm(editId);
             return;
