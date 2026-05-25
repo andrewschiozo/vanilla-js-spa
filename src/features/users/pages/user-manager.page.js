@@ -4,23 +4,38 @@ import { ButtonComponent } from "@/features/common/components/button.component.j
 
 export const UserManagerPage = (userService, router, editId = null) => {
     const container = document.createElement("div");
+    const props = new Proxy({
+            title: "Usuários"
+        },
+        {
+            set(target, property, value, receiver) {
+                const success = Reflect.set(target, property, value, receiver);
+                if (success) {
+                    container.querySelector('#page-title').textContent = value
+                }
+                return success;
+            },
+        },
+    );
     container.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h1>Gestão de Usuários</h1>
+        <div style="display: flex; justify-content: space-between;">
+            <h1 id="page-title">${props.title}</h1>
         
             <slot id="user-action-bar"></slot>
         </div>
+        <hr />
   
         <slot id="user-list"></slot>
         <slot id="user-form"></slot>
     `;
+
 
     const actionBar = container.querySelector("#user-action-bar");
     actionBar.append(
         ButtonComponent({
             child: "+ Novo Usuário",
             onClick: () => router.navigateTo("/usuario/novo"),
-            color: "success",
+            color: "green",
         }),
     );
 
@@ -38,6 +53,7 @@ export const UserManagerPage = (userService, router, editId = null) => {
         },
         showList: () => {
             actions.resetPage();
+            props.title = "Usuários"
             userList.append(
                 UserListComponent({
                     users: userService.getAll(),
@@ -50,20 +66,21 @@ export const UserManagerPage = (userService, router, editId = null) => {
         },
         showNewForm: () => {
             actions.resetPage();
+            props.title = "Novo usuário"
             userForm.append(
                 UserFormComponent({
                     user: null,
                     onSave: (formData) => {
                         userService.save(formData);
                         router.navigateTo("/usuarios");
-                    },
-                    onCancel: () => router.navigateTo("/usuarios"),
+                    }
                 }),
             );
             userForm.hidden = false;
         },
         showEditForm: (editId) => {
             actions.resetPage();
+            props.title = "Editar usuário"
             const userToEdit = userService.getById(editId);
 
             if (!userToEdit) {
@@ -77,8 +94,7 @@ export const UserManagerPage = (userService, router, editId = null) => {
                     onSave: (formData) => {
                         userService.save(formData);
                         router.navigateTo("/usuarios");
-                    },
-                    onCancel: () => router.navigateTo("/usuarios"),
+                    }
                 }),
             );
 

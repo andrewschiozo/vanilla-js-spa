@@ -7,24 +7,36 @@
 export const PrivateLayout = (contentEl, authService, router) => {
     const el = document.createElement("section");
     el.className = "private-layout";
-    el.style.cssText =
-        "display: flex; min-height: 100vh; font-family: sans-serif;";
+    el.style.cssText = "display: flex; min-height: 100vh; margin-bottom: 0";
 
     el.innerHTML = `
-        <aside style="width: 200px; background: #2c3e50; color: white; padding: 20px;">
-            <h2>Vanilla Js</h2>
-            <nav style="display: flex; flex-direction: column; gap: 15px; margin-top: 30px;">
-                <a href="#/home" style="color: white; text-decoration: none;">Home</a>
-                <a href="#/usuarios" style="color: white; text-decoration: none;">Usuários</a>
+        <aside style="width: 200px; padding: 20px;">
+            <h2 class="pico-color-sand">Vanilla Js</h2>
+
+            <nav style="display: flex; flex-direction: column; gap: 15px;">
+                <a href="#/home">Home</a>
+                <a href="#/usuarios">Usuários</a>
             </nav>
 
-            <div style="position: fixed; bottom: 0; margin-bottom: 10px">
-                <a href="#meu-perfil" style="color: #ccc; font-size: small; text-decoration: none">🦉${authService.user().name}</a>
-                <button id="logout-btn" style="background: #e74c3c; color: white; border: none; padding: 8px; width: 100%; cursor: pointer; border-radius: 4px; margin-top: 10px">Sair</button>
-            </div>
+            <small style="position: fixed; bottom: 0; margin-bottom: 10px; display: flex; flex-direction: column">
+                <a href="#meu-perfil">${authService.user().name} (perfil)</a>
+                <a href="#" id="logout-btn" class="pico-color-amber-300">Sair</a>
+            </small>
         </aside>
-        <main style="flex: 1; padding: 30px; background: #ecf0f1;"></main>
+        <main style="flex: 1; padding: 30px;" class="pico-background-slate-900"></main>
     `;
+
+    // joga o style no head
+    const style = document.createElement('style');
+    style.innerHTML = `.private-layout aside a { text-decoration: none}`;
+    document.head.appendChild(style);
+
+    // current page link
+    const currentPageLink = el.querySelector(`[href="#${router.currentRoute}"]`)
+    if (currentPageLink) {
+        el.querySelector('[aria-current="page"')?.removeAttribute('aria-current')
+        currentPageLink.setAttribute('aria-current', 'page')
+    }
 
     el.querySelector("#logout-btn").addEventListener("click", () => {
         authService.logout();

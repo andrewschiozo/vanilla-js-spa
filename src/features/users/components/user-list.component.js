@@ -9,12 +9,12 @@ export const UserListComponent = ({ users, onEdit, onViewDetails }) => {
     }
 
     el.innerHTML = `
-    <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-      <thead>
-        <tr style="background: #34495e; color: white; text-align: left;">
-          <th style="width: 20%; padding: 12px;">Nome</th>
-          <th style="padding: 12px;">E-mail</th>
-          <th style="width: 20%; padding: 12px; text-align: center;">Ações</th>
+    <table class="striped">
+      <thead >
+        <tr >
+          <th class="pico-background-slate-800" scope="col" style="width: 20%;">Nome</th>
+          <th class="pico-background-slate-800" scope="col">E-mail</th>
+          <th class="pico-background-slate-800" scope="col" style="width: 20%; text-align: center;">Ações</th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -25,27 +25,24 @@ export const UserListComponent = ({ users, onEdit, onViewDetails }) => {
 
     users.forEach((user) => {
         const tr = document.createElement("tr");
-        tr.style.borderBottom = "1px solid #ddd";
         tr.innerHTML = `
-      <td style="padding: 8px 12px;">${user.name}</td>
-      <td style="padding: 8px 12px;">${user.email}</td>
-      <td style="padding: 8px 12px; display: flex; justify-content: center; gap: 5px;" class="user-list-actions"></td>
-    `;
+            <th scope="row">${user.name}</th>
+            <td>${user.email}</td>
+            <td style="display: flex; justify-content: center; gap: 15px;">
+                <a href="#" class="action-view">Detalhes</a>
+                <a href="#" class="action-edit pico-color-amber">Editar</a>
+            </td>
+        `;
 
-        tr.querySelector(".user-list-actions").append(
-            ButtonComponent({
-                child: "Detalhes",
-                onClick: () => onViewDetails(user.id),
-                color: "info",
-                size: "small",
-            }),
-            ButtonComponent({
-                child: "Editar",
-                onClick: () => onEdit(user.id),
-                color: "warning",
-                size: "small",
-            }),
-        );
+        tr.querySelector('.action-view').addEventListener('click', (event) => {
+            event.preventDefault()
+            onViewDetails(user.id)
+        })
+
+        tr.querySelector('.action-edit').addEventListener('click', (event) => {
+            event.preventDefault()
+            onEdit(user.id)
+        })
 
         tbody.appendChild(tr);
     });

@@ -1,29 +1,48 @@
 export const LoginPage = (authService, router) => {
-    const el = document.createElement("div");
-    el.style.cssText =
-        "background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 300px;";
+    const el = document.createElement("article");
+
+     el.style.cssText = "width: 90%; max-width: 500px;";
 
     el.innerHTML = `
-        <h2 style="text-align: center; margin-bottom: 20px;">Vanilla SPA</h2>
+        <h2 style="text-align: center">Vanilla SPA</h2>
         <form>
-            <div style="margin-bottom: 15px;">
-                <input type="text" name="username" autocomplete="username" placeholder="Usuário" style="width: 100%; padding: 10px; box-sizing: border-box;" />
-            </div>
-            <div style="margin-bottom: 20px;">
-                <input type="password" name="password" autocomplete="current-password" placeholder="Senha" style="width: 100%; padding: 10px; box-sizing: border-box;" />
-            </div>
-            <button type="submit" style="width: 100%; padding: 10px; background: #2ecc71; color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 4px;">Entrar</button>
+            <input
+                type="text"
+                name="username"
+                autocomplete="username"
+                placeholder="Usuário"
+                required
+            />
+
+            <input
+                type="password"
+                name="password"
+                autocomplete="current-password"
+                placeholder="Senha"
+                required
+            />
+
+            <input type="submit" value="Entrar"/>
         </form>
     `;
+
+    const form = el.querySelector("form")
+
+    const messageBox = document.createElement('small')
+    messageBox.classList.add("pico-color-red-200")
+    messageBox.hidden = true
+
+    el.append(messageBox)
 
     el.querySelector("form").addEventListener("submit", (e) => {
         e.preventDefault();
         const credentials = Object.fromEntries(
-            new FormData(document.querySelector("form")).entries(),
+            new FormData(form).entries(),
         );
 
         if (!authService.login(credentials.username, credentials.password)) {
-            alert("Credenciais inválidas!");
+            messageBox.innerText = "Credenciais inválidas"
+            messageBox.hidden = false
             return;
         }
 

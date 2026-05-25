@@ -2,10 +2,9 @@ import { ButtonComponent } from "@/features/common/components/button.component.j
 import { InputGroupComponent } from "@/features/common/components/input-group.component.js";
 import { SelectGroupComponent } from "@/features/common/components/select-group.component.js";
 
-export const UserFormComponent = ({ user, onSave, onCancel }) => {
+export const UserFormComponent = ({ user, onSave }) => {
     const el = document.createElement("div");
-    el.style.cssText =
-        "background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 400px;";
+    el.style.cssText = "padding: 20px; max-width: 500px;";
 
     const props = new Proxy({
             id: user?.id || "",
@@ -29,14 +28,27 @@ export const UserFormComponent = ({ user, onSave, onCancel }) => {
         { label: "User", value: 2 },
     ];
 
-    el.innerHTML = `
-    <h3>${props.id ? "Editar Usuário" : "Novo Usuário"}</h3>
-    
+    el.innerHTML = `    
     <div class="form-fields"></div>
 
-    <div id="admin-warning"></div>
-    
     <div class="form-actions"></div>
+
+    <dialog id="modal-warning-admin">
+        <article >
+            <h2>Advertência: Usuário ADMIN</h2>
+            <p style="margin: 50px 0; text-align: center">
+                Grandes poderes vêm com grandes responsabilidades!
+            </p>
+            <footer>
+                <button
+                    class="pico-background-amber"
+                    style="border: none"
+                    autofocus
+                    data-target="modal-warning-admin"
+                    >Eu entendi</button>
+            </footer>
+        </article>
+    </dialog>
   `;
 
     const save = () => {
@@ -47,11 +59,10 @@ export const UserFormComponent = ({ user, onSave, onCancel }) => {
     };
 
     const updateUI = () => {
-        // Regra do Perfil Admin
-        adminWarningEl.style.display = "none";
+        // regra do perfil Admin
+        modalWarningAdmin.removeAttribute('open')
         if (Number(props.profile) === 1) {
-            adminWarningEl.style.display = "block";
-            adminWarningEl.textContent = "Grandes poderes vêm com grandes responsabilidades."
+            modalWarningAdmin.setAttribute('open', true)
         }
     };
 
@@ -77,14 +88,13 @@ export const UserFormComponent = ({ user, onSave, onCancel }) => {
         }),
     );
 
-    const adminWarningEl = el.querySelector("#admin-warning");
-    adminWarningEl.style.cssText = "margin-top: 15px; padding: 10px; background: #fff3cd; color: #856404; border: 1px solid #ffeeba; border-radius: 4px; font-size: 14px; font-weight: bold;"
-
+    const modalWarningAdmin = el.querySelector("#modal-warning-admin");
+    modalWarningAdmin.querySelector('button').addEventListener('click', () => {
+        modalWarningAdmin.removeAttribute('open')
+    })
     const actionsContainer = el.querySelector(".form-actions");
-    actionsContainer.style.cssText = "display: flex; justify-content: start; gap: 5px; margin-top: 15px;"
     actionsContainer.append(
-        ButtonComponent({ child: "Salvar", onClick: save, color: "success" }),
-        ButtonComponent({ child: "Cancelar", onClick: onCancel }),
+        ButtonComponent({ child: "Salvar", onClick: save, color: "green", style: "width: 100%" }),
     );
 
     const init = () => {

@@ -5,11 +5,10 @@ export const SelectGroupComponent = ({
     onChange,
 }) => {
     const el = document.createElement("div");
-    el.style.cssText = "margin-bottom: 15px;";
 
     el.innerHTML = `
-        <label style="display:block; margin-bottom:5px;">${label || ""}</label>
-        <select style="width: 100%; padding: 8px; box-sizing: border-box;"></select>
+        <label>${label || ""}</label>
+        <select></select>
     `;
 
     const select = el.querySelector("select");
